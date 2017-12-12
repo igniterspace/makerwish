@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maker Wish</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/custom.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+	<div id="header"></div>
+
+	<div class="container">
+    <h3>STEP 3 of 4:<small>Provide Your Child's Information​</small></h3>	
+	
+	<div class="container">
+		<form>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="col-md-12 colorbg">
+					<h4>Child's Details:</h4>
+					
+					<div class="form-group">
+						<table class="table table-borderless">				
+							<tr><td>Child's first name:</td> <td><input type="text" class="form-control" id="cname" name="orphansname"></td></tr>
+							<tr><td>Child's Age:</td> <td><input type="text" class="form-control" id="cage" name="orphansage"></td></tr>		​
+							<tr><td>Delivering Address:</td> <td><textarea class="form-control" rows="5" id="caddress" name="orphansaddress"></textarea></td></tr>
+							
+						</table>					
+					</div>
+					
+					</br></br>
+				</div>
+			</div>
+			
+			<div class="col-md-6">
+				<div class="col-md-12 colorbg">
+					<h4>Your Contact Information:</h4>
+					
+					<div class="form-group">
+						<table class="table table-borderless">				
+							<tr><td class="col-md-3">Your Name:</td> <td><input type="text" class="form-control" id="yname" name="name"></td></tr>
+							<tr><td>Email:</td> <td><input type="text" class="form-control" id="yage" name="age"></td></tr>		​
+							<tr><td>Personal note to your child (optional):</td> <td><textarea class="form-control" rows="5" id="yaddress" name="address"></textarea></td></tr>							
+						</table>					
+					</div>
+					
+					
+					</br></br>
+				</div>				
+			</div>
+		</div>
+		</form>
+	</div>
+	</br>
+	<div class="checkbox">
+	  <label><input type="checkbox" value="">I accept that this information will be available to 'Lær Kidsa Koding' and IgniterGlobal (www.igniterglobal.com) staff.
+	  Non of the information will be shared with third parties. Information will be kept stored maximum duration of 12 months.</label>
+	</div>
+	</br></br>
+	<div class="row">
+		<div class="col-md-6">
+		Gift: <b>Maker Kit #1 (12 to 15 year)</b></br>
+		Cost of the Gift: <b>150 NOK</b></br>
+		Shipping: <b>Free (sponsored by SPONSOR)</b></br>
+		</div>
+		<div class="col-md-6">
+			<div class="pull-right"> 
+				<button id="paygift" class="btn btn-primary">Pay 300NOK for both gifts</button>
+			</div>
+		</div>
+	</div>
+	
+	</div>
+	</br>
+	
+	
+	</br>
+	
+	<div id="test"></div>
+	
+	<div id="footer"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/util.js"></script>
+	<script> 
+		$("#header").load("header.html");
+		$("#footer").load("footer.html");	  
+		
+		var cookieValue = readCookie('orphansname');
+		$('#test').html(cookieValue);
+		
+		$("#paygift").click(function() {
+			
+			var formData2 = $('form').serializeArray();
+			var formData = '{"childrenhome": "SAS House","orphansid": "5", "orphansname": "Mahesh2", "orphansage": "12", "giftlevel": "L1", "childsname": "David Merto", "childsage": "7", "deliveryadd": "PO3456, Svein Gata, Oslo 2345", "giversname": "Robert Merto", "email": "merto@gmail.com", "status":"NOTPAID" ,"note": "Happy Christmas!!"}'; 
+			$.ajax({
+				url : APIURL + "/gifts",
+				type: "POST",
+				data : JSON.stringify(formData),
+				contentType : 'application/json; charset=utf-8',
+				success: function(data, textStatus, jqXHR)
+				{
+					//data - response from server					
+					window.location.href = "step4.html";
+				},
+				error: function (jqXHR, textStatus, errorThrown)
+				{
+					
+				}
+			});
+			
+		});
+		
+	</script>
+  </body>
+</html>

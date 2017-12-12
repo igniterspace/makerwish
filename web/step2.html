@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maker Wish</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/custom.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+	<div id="header"></div>
+
+	<div class="container">
+    <h3>STEP 2 of 4:<small> You are giving this child a gift​</small></h3>	
+	
+	<div class="container">
+		<div class="row colorbg">
+			<div class="col-md-6">
+			<table>				
+				<tr><td>Child's Name:</td> <td><b><div id="orphansname"></div></b></td></tr>
+				<tr><td>Age:</td> <td><b><div id="orphansage"></div></b></td></tr>		​
+				<tr><td>Gift:</td> <td><b>Maker Kit #1 (12 to 15 year)</b></td></tr>
+				<tr><td>Cost of the Gift:</td> <td><b>150 NOK</b></td></tr>
+				<tr><td>Shipping:</td> <td>Free (sponsored by SPONSOR)</td></tr>
+			</table>
+			</br>
+			<a href="step3.html" class="btn btn-primary" role="button">Gift to this child</a>
+			</div>
+			
+			<div class="col-md-6">
+				</br>
+				<div class="clearfix">
+				<img src="images\group.jpg" alt="group photo" class="pull-left"></div>
+				<h3>Sudarma Children Home,</h3>
+				#24, Papiliyana, Boralesgamuwa, Sri Lanka</br>
+				+94 112 345 678</br>
+				This children home has 45 orphan kids between 5 to 16 years old. 12 of them are girls and 33 are boys. </br></br>				
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	</br>
+	
+	<div id="footer"></div>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/util.js"></script>
+	<script> 
+		$("#header").load("header.html");
+		$("#footer").load("footer.html");
+
+		function getUrlVar(key){
+			var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+			return result && result[1] || ""; 
+		}
+
+		var level = getUrlVar('level');
+		
+		$.ajax({
+			url: APIURL + '/kid?level='+level,
+			type: 'GET',
+			crossDomain: true,
+			contentType: 'application/json',				
+			success: function(data) {
+				
+				$('#orphansname').html(data.orphansname);
+				var currentTime = new Date();
+				var year = currentTime.getFullYear();
+				var age = year - data.orphansyob;
+				$('#orphansage').html(age + ' years old');
+				
+				createCookie('orphansname',data.orphansname,7);
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                $('#content').html(errorMsg);
+			}
+		});	
+	</script> 
+  </body>
+</html>
