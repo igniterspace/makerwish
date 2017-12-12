@@ -13,6 +13,12 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 app.use(bodyParser.json({ strict: false }));
 
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token");
+  next();
+});
 
 // Get a Random Child endpoint
 /*
@@ -55,11 +61,18 @@ app.get('/kid', function (req, res) {
         console.log("# of records: " + result.Items.length);
         //take the first OPEN record to issue, incase age doesnt match
         var record = result.Items [0];
-
+	
+		console.log(minAge);
+		console.log(maxAge);
+		
         for (var i=0; i<result.Items.length; i++) {
           var element = result.Items[i];
           console.log(element);
-          if (element.orphansyob >= minAge && element.orphansyob <= maxAge) {
+		  
+		  var age = element.orphansyob;
+		  console.log(age);
+		  
+          if (age >= minAge && age <= maxAge) {
             record = element;
             break;
           }
@@ -105,7 +118,9 @@ app.get('/gifts', function (req, res) {
 */
 app.post('/gifts', function (req, res) {
   const timestamp = new Date().getTime();
-  const { childrenhome, orphansid, orphansname, orphansage, giftlevel, childsname, childsage, deliveryadd, giversname, email, note, status } = req.body;
+  var rec = JSON.parse(req.body);
+  console.log(rec);
+  const { childrenhome, orphansid, orphansname, orphansage, giftlevel, childsname, childsage, deliveryadd, giversname, email, note, status } = rec;
 
   const params = {
     TableName: GIFTS_TABLE,
@@ -125,7 +140,7 @@ app.post('/gifts', function (req, res) {
       note: note
     },
   };
-
+  
   dynamoDb.put(params, (error) => {
     if (error) {
       console.log(error);
