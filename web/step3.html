@@ -22,7 +22,7 @@
     <h3>Provide Your Child's Information​ <small>(Step 3 of 4)</small> </h3>	</br>
 	
 	<div class="container">
-		<form>
+		<form id="giftform">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-12 colorbg">
@@ -30,9 +30,9 @@
 					<h4>Child's Details:</h4>
 					<div class="form-group">
 						<table class="table table-borderless">				
-							<tr><td>Child's first name:</td> <td><input type="text" class="form-control" id="cname" name="orphansname"></td></tr>
-							<tr><td>Child's Age:</td> <td><input type="text" class="form-control" id="cage" name="orphansage"></td></tr>		​
-							<tr><td>Delivering Address:</td> <td><textarea class="form-control" rows="5" id="caddress" name="orphansaddress"></textarea></td></tr>
+							<tr><td>Child's first name:</td> <td><input type="text" class="form-control" id="kidsname" name="kidsname" required="required"></td></tr>
+							<tr><td>Child's Age:</td> <td><input type="number" class="form-control" id="kidsage" name="kidsage" required="required"></td></tr>		​
+							<tr><td>Delivering Address:</td> <td><textarea class="form-control" rows="5" id="address" name="kidsaddress" required="required"></textarea></td></tr>
 							
 						</table>					
 					</div>
@@ -45,9 +45,9 @@
 					<h4>Gift Giver Information:</h4>
 					<div class="form-group">
 						<table class="table table-borderless">				
-							<tr><td class="col-md-3">Your Name:</td> <td><input type="text" class="form-control" id="yname" name="name"></td></tr>
-							<tr><td>Email:</td> <td><input type="text" class="form-control" id="yage" name="age"></td></tr>		​
-							<tr><td>Personal note to your child (optional):</td> <td><textarea class="form-control" rows="5" id="yaddress" name="address"></textarea></td></tr>							
+							<tr><td class="col-md-3">Your Name:</td> <td><input type="text" class="form-control" id="yname" name="givername" required="required"></td></tr>
+							<tr><td>Email:</td> <td><input type="email" class="form-control" id="email" name="giveremail" required="required"></td></tr>		​
+							<tr><td>Personal note to your child (optional):</td> <td><textarea class="form-control" rows="5" id="givernote" name="note" required="required"></textarea></td></tr>							
 						</table>					
 					</div>
 				</div>				
@@ -57,7 +57,7 @@
 	</div>
 	</br>
 	<div class="checkbox">
-	  <label><input type="checkbox" value="">I accept that this information will be available to <a href='https://www.ikt-norge.no'>IKT-Norge</a>, 'Lær Kidsa Koding' 
+	  <label><input type="checkbox" id="acceptcbx" value="">I accept that this information will be available to <a href='https://www.ikt-norge.no'>IKT-Norge</a>, 'Lær Kidsa Koding' 
 	  and <a href='www.igniterglobal.com'>IgniterGlobal</a>. Collected information will NOT be shared with third parties and
 	   will be kept maximum duration of 12 months.</label>
 	</div>
@@ -82,17 +82,43 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/util.js"></script>
+	<script src="js/jquery.validate.min.js"></script>
+	
 	<script> 
 		$("#header").load("header.html");
 		$("#footer").load("footer.html");	  
 		
-		var cookieValue = readCookie('orphansname');
-		$('#test').html(cookieValue);
+		document.getElementById("paygift").disabled = true;
 		
-		$("#paygift").click(function() {
+		var sessiondata = JSON.parse( sessionStorage.getItem('orphansinfo'));
+		var level = sessionStorage.getItem('level');
+		$('#test').html(sessiondata.orphansname);
+		
+		$(".checkbox").change(function() {
+			if($("#acceptcbx").is(":checked")) {
+				document.getElementById("paygift").disabled = false;
+			}else
+				document.getElementById("paygift").disabled = true;
+		});
+
+		$("#paygift").click(function() {		
+		
 			
-			var formData2 = $('form').serializeArray();
-			var formData = '{"childrenhome": "SAS House","orphansid": "5", "orphansname": "Mahesh2", "orphansage": "12", "giftlevel": "L1", "childsname": "David Merto", "childsage": "7", "deliveryadd": "PO3456, Svein Gata, Oslo 2345", "giversname": "Robert Merto", "email": "merto@gmail.com", "status":"NOTPAID" ,"note": "Happy Christmas!!"}'; 
+			var formAr = $('form').serializeArray(),
+				dataObj = {};
+			$(formAr).each(function(i, field){
+				dataObj[field.name] = field.value;
+			});
+			var currentTime = new Date();
+			var year = currentTime.getFullYear();
+			var age = year - sessiondata.orphansyob;
+			var formData = '{"childrenhome": "SAS House","orphansid": "'+ sessiondata.id + 
+								'", "orphansname": "'+ sessiondata.orphansname + 
+								'", "orphansage": "'+ age +'", "giftlevel": "'+ level + 
+								'", "childsname": "'+ dataObj["kidsname"] + 
+								'", "childsage": "'+ dataObj["kidsage"] +'", "deliveryadd": "'+ dataObj["kidsaddress"] + 
+								'", "giversname": "'+ dataObj["givername"] + '", "email": "'+ dataObj["giveremail"] + '", "status":"NOTPAID" ,"note": "'+
+								dataObj["note"] +'"}'; 
 			$.ajax({
 				url : APIURL + "/gifts",
 				type: "POST",

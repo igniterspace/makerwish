@@ -86,7 +86,8 @@
 				var age = year - data.orphansyob;
 				$('#orphansage').html(age + ' years old');
 				
-				createCookie('orphansname',data.orphansname,7);
+				sessionStorage.setItem('orphansinfo',JSON.stringify(data));
+				sessionStorage.setItem('level',level);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				var errorMsg = 'Ajax request failed: ' + xhr.responseText;
