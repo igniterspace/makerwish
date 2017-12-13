@@ -23,7 +23,7 @@
     padding-left:10px;
 }
 
-@media ( min-width: 100px ) {
+/*@media ( min-width: 100px ) {
     .grid-divider {
         position: relative;
         padding: 0;
@@ -41,7 +41,7 @@
     .col-padding {
         padding: 0 15px;
     }
-}
+}*/
 
 ul {
     display: block;
