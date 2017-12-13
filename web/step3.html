@@ -138,8 +138,9 @@
 				contentType : 'application/json; charset=utf-8',
 				success: function(data, textStatus, jqXHR)
 				{
-					//data - response from server					
-					window.location.href = "step4.html";
+					//data - response from server
+					sessionStorage.setItem('timestamp',data.timestamp);					
+					window.location.href = "success.html";
 				},
 				error: function (jqXHR, textStatus, errorThrown)
 				{

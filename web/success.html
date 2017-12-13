@@ -43,10 +43,22 @@
 	<script> 
 		$("#header").load("header.html");
 		$("#footer").load("footer.html");	  
-		
-		var cookieValue = readCookie('orphansname');
-		$('#test').html(cookieValue);
-		
+		var ts = sessionStorage.getItem('timestamp')
+		$.ajax({
+				url : APIURL + "/confirm?id="+ts,
+				type: 'GET',
+				crossDomain: true,
+				contentType: 'application/json',	
+				success: function(data, textStatus, jqXHR)
+				{
+					//data - response from server					
+					
+				},
+				error: function (jqXHR, textStatus, errorThrown)
+				{
+					//window.location.href = "error.html";
+				}
+			});
 	</script> 
   </body>
 </html>
