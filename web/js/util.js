@@ -1,4 +1,4 @@
-var APIURL = 'https://0ybo1aql07.execute-api.ap-south-1.amazonaws.com/dev'
+var APIURL = 'https://639q5f77vl.execute-api.us-east-1.amazonaws.com/dev'
 
 function createCookie(name,value,days) {
     var expires = "";

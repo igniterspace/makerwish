@@ -6,6 +6,10 @@ This is the codebase of the makerwish.org application. The system is built using
 * Clone this repository
 * Run 'sls deploy' to deploy the stack to AWS
 
+## Web Frontend files
+Use following command to upload the files to the S3 bucket
+```aws s3 sync web s3://app.iktnorge.makerwish.org```
+
 ## APIs
 Below are the REST APIs to communicate with the backend
 

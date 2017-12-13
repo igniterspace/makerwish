@@ -92,3 +92,8 @@ ul {
     background: #acd858;
     box-shadow: none;
 }
+
+table { 
+    border-spacing: 10px;
+    border-collapse: separate;
+}

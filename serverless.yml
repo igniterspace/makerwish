@@ -21,6 +21,7 @@ service: makerwish-reg
 custom:
   giftsTableName: 'makerwishgifts-${self:provider.stage}'
   kidsTableName: 'makerwishkids-${self:provider.stage}'
+  s3Bucket: makerwish
   
 provider:
   name: aws
