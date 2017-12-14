@@ -152,11 +152,11 @@ app.post('/gifts', function (req, res) {
 
 // Once the payment is made this service is used to update the record with payment confirmation
 /*
-  curl -H "Content-Type: application/json" -X GET ${BASEURL}/confirm?id=1512479126604
+  curl -H "Content-Type: application/json" -X GET ${BASEURL}/confirm?id=1512479126604&oid=1
 */
 app.get('/confirm', function (req, res) {
-  var recordid = parseInt(req.query.id);
-  
+  var recordid = parseInt(req.query.id);  
+  var orpId = parseInt(req.query.oid);
 
   if (!recordid) {
     res.status(404).json({ error: "ID not valid" });
@@ -173,8 +173,7 @@ app.get('/confirm', function (req, res) {
       },
       ReturnValues:"ALL_NEW"
     };
-
-    var orpId = 0;
+    
     dynamoDb.update(params, (error, data) => {
       if (error) {
           console.error("Unable to update item - gifts. Error JSON:", JSON.stringify(error, null, 2));
@@ -183,41 +182,37 @@ app.get('/confirm', function (req, res) {
           var retObj = JSON.parse(JSON.stringify(data, null, 2));
           console.log("Gifts UpdateItem succeeded:",JSON.stringify(data, null, 2));
           res.json({ recordid });
-          orpId = retObj.Attributes.orphansid;
-          console.log("Orphans id:", orpId);
-          console.log("test 0", 0);
-
-          //update kids table
-          const params2 = {
-            TableName: GIFTS_TABLE,
-            Key:{
-              "orphansid": orpId
-            },
-            UpdateExpression: "set #status = :status",
-            ExpressionAttributeNames: { "#status": "status" },
-            ExpressionAttributeValues:{
-                ":status": "DONE"
-            },
-            ReturnValues:"ALL_NEW"
-            
-          };
-          console.log("updating kids table to done.");
-          dynamoDb.update(params2, (error, data) => {
-            if (error) {
-                console.error("Unable to update item - kids. Error JSON:", JSON.stringify(error, null, 2));
-                res.status(501).json({ error: 'Could not update kids record' });
-            } else {
-                console.log("Kids UpdateItem succeeded:", JSON.stringify(data, null, 2));
-                res.json({ recordid });
-            }
-          });
-    
-          console.log("all updates done");
-      }
+   
+      }  
     });
 
-      
-  }
+     console.log("Orphans id:", orpId);
+     //update kids table
+     const params2 = {
+       TableName: KIDS_TABLE,
+       Key:{
+         "id": orpId
+       },
+       UpdateExpression: "set #status = :status",
+       ExpressionAttributeNames: { "#status": "status" },
+       ExpressionAttributeValues:{
+           ":status": "DONE"
+       },
+       ReturnValues:"ALL_NEW"
+       
+     };
+     console.log("updating kids table to done.");
+     dynamoDb.update(params2, (error, data) => {
+       if (error) {
+           console.error("Unable to update item - kids. Error JSON:", JSON.stringify(error, null, 2));
+           res.status(501).json({ error: 'Could not update kids record' });
+       } else {
+           console.log("Kids UpdateItem succeeded:", JSON.stringify(data, null, 2));
+           res.json({ recordid });
+       }
+     });
+
+  }  
   
 });
 
